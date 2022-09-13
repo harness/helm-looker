@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: '{{ include "app.name" . }}-auto-provision'
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: '{{ include "app.name" . }}-auto-provision'
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+          command: ["bash",  "-c", "$HOME/auto-provision.sh"]
+          env:
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.lookerSecrets.clientSecret.name }}
+                  key: {{ .Values.lookerSecrets.clientSecret.key }}
+            - name: TIMESCALE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.timescaleSecrets.timescalePassword.name }}
+                  key: {{ .Values.timescaleSecrets.timescalePassword.key }}
+            - name: AP_PROTOCOL
+              value: 'http'
+            - name: AP_HOST
+              value: 'hrns-{{ include "app.name" . }}-api'
+            - name: AP_PORT
+              value: '{{ .Values.service.port.api }}'
+          envFrom:
+            - configMapRef:
+                name: '{{ include "app.name" . }}'
+      restartPolicy: Never
+  backoffLimit: 4

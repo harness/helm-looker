@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ include "app.name" . }}'
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  progressDeadlineSeconds: 300
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: {{.Values.maxSurge}}
+      maxUnavailable: {{.Values.maxUnavailable}}
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "app.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: '{{ include "app.name" . }}'
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+              {{- toYaml .Values.securityContext | nindent 12 }}
+#          lifecycle:
+#            postStart:
+#              exec:
+#                command: ["bash",  "-c", "$HOME/auto-provision.sh"]
+          ports:
+          - name: looker-web
+            containerPort: 9999
+            protocol: "TCP"
+          - name: looker-api
+            containerPort: 19999
+            protocol: "TCP"
+          resources:
+              {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            - name: LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.lookerSecrets.licenseKey.name }}
+                  key: {{ .Values.lookerSecrets.licenseKey.key }}
+            - name: LKR_MASTER_KEY_ENV
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.lookerSecrets.lkrMasterKey.name }}
+                  key: {{ .Values.lookerSecrets.lkrMasterKey.key }}
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.lookerSecrets.clientSecret.name }}
+                  key: {{ .Values.lookerSecrets.clientSecret.key }}
+            - name: TIMESCALE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.timescaleSecrets.timescalePassword.name }}
+                  key: {{ .Values.timescaleSecrets.timescalePassword.key }}
+          envFrom:
+          - configMapRef:
+              name: '{{ include "app.name" . }}'
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: looker-api
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 5
+            failureThreshold: 8
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: looker-api
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            periodSeconds: 10
+            failureThreshold: 20
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - '{{ include "app.name" . }}'
+            topologyKey: "kubernetes.io/hostname"
+      {{- with .Values.affinity }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
