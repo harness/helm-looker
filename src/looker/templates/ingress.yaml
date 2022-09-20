@@ -1,4 +1,4 @@
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.global.ingress.enabled -}}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -6,8 +6,8 @@ metadata:
   name: '{{ include "app.name" . }}'
   namespace: {{ .Release.Namespace }}
 spec:
-  {{- if .Values.ingress.className -}}
-  ingressClassName: {{ .Values.ingress.className | quote }}
+  {{- if .Values.global.ingress.className -}}
+  ingressClassName: {{ .Values.global.ingress.className | quote }}
   {{- end }}
   rules:
     - host: {{ .Values.ingress.host | quote }}
@@ -48,7 +48,7 @@ spec:
                 name: '{{ include "app.name" . }}-web'
                 port:
                   name: looker-web
-  {{- if .Values.ingress.tls.enabled }}
+  {{- if .Values.global.ingress.tls.enabled }}
   tls:
     - hosts:
         - {{ .Values.ingress.host | quote }}

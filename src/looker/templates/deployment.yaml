@@ -61,8 +61,8 @@ spec:
             - name: LKR_MASTER_KEY_ENV
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.lookerSecrets.lkrMasterKey.name }}
-                  key: {{ .Values.lookerSecrets.lkrMasterKey.key }}
+                  name: {{ .Values.lookerSecrets.masterKey.name }}
+                  key: {{ .Values.lookerSecrets.masterKey.key }}
             - name: CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
@@ -71,8 +71,8 @@ spec:
             - name: TIMESCALE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.timescaleSecrets.timescalePassword.name }}
-                  key: {{ .Values.timescaleSecrets.timescalePassword.key }}
+                  name: {{ .Values.timescaleSecrets.password.name }}
+                  key: {{ .Values.timescaleSecrets.password.key }}
           envFrom:
           - configMapRef:
               name: '{{ include "app.name" . }}'

@@ -28,8 +28,8 @@ spec:
             - name: TIMESCALE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.timescaleSecrets.timescalePassword.name }}
-                  key: {{ .Values.timescaleSecrets.timescalePassword.key }}
+                  name: {{ .Values.timescaleSecrets.password.name }}
+                  key: {{ .Values.timescaleSecrets.password.key }}
             - name: AP_PROTOCOL
               value: 'http'
             - name: AP_HOST
