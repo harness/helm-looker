@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 data:
-  HOST_URL: '{{ .Values.global.loadbalancerURL }}'
+  HOST_URL: '{{ .Values.ingress.host }}'
   FIRST_NAME: '{{ .Values.config.firstName }}'
   LAST_NAME: '{{ .Values.config.lastName }}'
   EMAIL: '{{ .Values.config.email }}'
