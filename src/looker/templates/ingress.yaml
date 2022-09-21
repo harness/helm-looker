@@ -1,0 +1,58 @@
+{{- if .Values.global.ingress.enabled -}}
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: '{{ include "app.name" . }}'
+  namespace: {{ .Release.Namespace }}
+spec:
+  {{- if .Values.global.ingress.className }}
+  ingressClassName: {{ .Values.global.ingress.className | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: '{{ include "app.name" . }}-web'
+                port:
+                  name: looker-web
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: 'hrns-{{ include "app.name" . }}-api'
+                port:
+                  name: looker-api
+          - path: /api-docs/
+            pathType: Prefix
+            backend:
+              service:
+                name: 'hrns-{{ include "app.name" . }}-api'
+                port:
+                  name: looker-api
+          - path: /versions
+            pathType: Prefix
+            backend:
+              service:
+                name: 'hrns-{{ include "app.name" . }}-api'
+                port:
+                  name: looker-api
+          - path: /api/internal/
+            pathType: Prefix
+            backend:
+              service:
+                name: '{{ include "app.name" . }}-web'
+                port:
+                  name: looker-web
+  {{- if .Values.global.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host | quote }}
+      secretName: {{ .Values.ingress.tls.secretName }}
+  {{- end }}
+
+{{- end }}

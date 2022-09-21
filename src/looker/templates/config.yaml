@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: '{{ include "app.name" . }}'
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+data:
+  HOST_URL: '{{ .Values.global.loadbalancerURL }}'
+  FIRST_NAME: '{{ .Values.config.firstName }}'
+  LAST_NAME: '{{ .Values.config.lastName }}'
+  EMAIL: '{{ .Values.config.email }}'
+  CLIENT_ID: '{{ .Values.config.clientId }}'
+  TIMESCALE_CONNECTION_NAME: '{{ .Values.config.timescaleConnectionName }}'
+  TIMESCALE_HOST: '{{ .Values.config.timescaleHost }}'
+  TIMESCALE_PORT: '{{ .Values.config.timescalePort }}'
+  TIMESCALE_DATABASE: '{{ .Values.config.timescaleDatabase }}'
+  TIMESCALE_USER: '{{ .Values.config.timescaleUser }}'
+  PROJECT_NAME: '{{ .Values.config.projectName }}'
