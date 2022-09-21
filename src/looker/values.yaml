@@ -1,0 +1,113 @@
+# Default values for looker
+# This is a YAML-formatted file.
+
+config:
+  # -- name of the user who performs setup and support tasks
+  firstName: Harness
+  # -- last name of the user who performs setup and support tasks
+  lastName: Support
+  # -- email address of the support user, required for initial signup and support
+  email: ''
+  # -- id used by initial setup user for authentication, generate a 20-byte key, e.g. openssl rand -hex 10
+  clientId: ''
+  # -- timescale connection name, must match model connection name
+  timescaleConnectionName: 'qa-timescale'
+  # -- timescale hostname
+  timescaleHost: ''
+  # -- timescale port
+  timescalePort: ''
+  # -- timescale database name
+  timescaleDatabase: ''
+  # -- timescale user
+  timescaleUser: ''
+  # -- name of the looker project which will be created
+  projectName: 'Harness'
+
+lookerSecrets:
+  licenseKey:
+    name: harness-secrets
+    # -- name of secret containing the looker license key which will be provided by Harness
+    key: lookerLicenseKey
+  masterKey:
+    name: harness-secrets
+    # -- name of secret containing the key used for at rest encryption by looker, generate a Base64, 32-byte key, e.g. openssl rand -base64 32
+    key: lookerMasterKey
+  clientSecret:
+    name: harness-secrets
+    # -- name of secret containing the client secret used for initial setup, generate a 24-byte key, e.g. openssl rand -hex 12
+    key: lookerClientSecret
+
+timescaleSecrets:
+  password:
+    name: harness-secrets
+    # -- name of secret containing the timescale password
+    key: lookerTimescalePassword
+
+ingress:
+  enabled: false
+  className: ""
+  # -- Required if ingress is enabled, Looker requires a separate DNS domain name to function
+  host:
+  tls:
+    enabled: false
+
+global:
+  loadbalancerURL: ""
+  airgap: "false"
+maxSurge: 1
+maxUnavailable: 0
+
+image:
+  registry: docker.io
+  repository: harness/looker-signed
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "22.14.61.2"
+  digest: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: "harness-default"
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext:
+  runAsUser: 1001
+  runAsNonRoot: true
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port:
+    web: 9999
+    api: 19999
+
+resources:
+  limits:
+    cpu: 4
+    memory: 8192Mi
+  requests:
+    cpu: 2
+    memory: 4096Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
