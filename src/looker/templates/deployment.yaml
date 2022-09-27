@@ -92,6 +92,30 @@ spec:
             timeoutSeconds: 5
             periodSeconds: 10
             failureThreshold: 20
+          volumeMounts:
+            - name: looker-startup
+              mountPath: /home/looker/looker/lookerstart.cfg
+              subPath: lookerstart.cfg
+            - name: lookerfiles
+              mountPath: {{ .Values.modelsDirectory }}
+            - name: looker-db
+              mountPath: /home/looker/looker/.db
+      volumes:
+        - name: looker-startup
+          configMap:
+            defaultMode: 420
+            name: looker-startup-options
+            items:
+              - key: lookerstart.cfg
+                path: lookerstart.cfg
+        - name: lookerfiles
+          persistentVolumeClaim:
+            claimName: lookerfiles
+            readOnly: false
+        - name: looker-db
+          persistentVolumeClaim:
+            claimName: looker-db
+            readOnly: false
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
