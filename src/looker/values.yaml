@@ -77,7 +77,7 @@ image:
   repository: harness/looker-signed
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "22.14.61.2"
+  tag: "22.16.35"
   digest: ""
 
 nameOverride: ""
