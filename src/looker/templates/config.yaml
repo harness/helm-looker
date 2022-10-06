@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 data:
-  HOST_URL: '{{ .Values.ingress.host }}'
+  HOST_URL: '{{ ternary "https" "http" .Values.global.ingress.tls.enabled }}://{{ .Values.ingress.host }}'
   FIRST_NAME: '{{ .Values.config.firstName }}'
   LAST_NAME: '{{ .Values.config.lastName }}'
   EMAIL: '{{ .Values.config.email }}'
@@ -17,3 +17,15 @@ data:
   TIMESCALE_DATABASE: '{{ .Values.config.timescaleDatabase }}'
   TIMESCALE_USER: '{{ .Values.config.timescaleUser }}'
   PROJECT_NAME: '{{ .Values.config.projectName }}'
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: looker-startup-options
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+data:
+  lookerstart.cfg: 'LOOKERARGS="--no-ssl --shared-storage-dir={{ .Values.modelsDirectory }}"'

@@ -36,8 +36,18 @@ spec:
               value: 'hrns-{{ include "app.name" . }}-api'
             - name: AP_PORT
               value: '{{ .Values.service.port.api }}'
+            - name: MODELS_DIR
+              value: {{ .Values.modelsDirectory }}
           envFrom:
             - configMapRef:
                 name: '{{ include "app.name" . }}'
+          volumeMounts:
+            - name: lookerfiles
+              mountPath: {{ .Values.modelsDirectory }}
+      volumes:
+        - name: lookerfiles
+          persistentVolumeClaim:
+            claimName: lookerfiles
+            readOnly: false
       restartPolicy: Never
   backoffLimit: 4

@@ -1,6 +1,6 @@
-# ng-custom-dashboards
+# looker
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.52.10](https://img.shields.io/badge/AppVersion-v1.52.10-informational?style=flat-square)
+![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.14.61.2](https://img.shields.io/badge/AppVersion-22.14.61.2-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -16,60 +16,59 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| authSecrets.acl.key | string | `"AUTH_ACCESS_CONTROL_SECRET"` |  |
-| authSecrets.acl.name | string | `"harness-secrets"` |  |
-| authSecrets.ccm.key | string | `"AUTH_CCM_SECRET"` |  |
-| authSecrets.ccm.name | string | `"harness-secrets"` |  |
-| authSecrets.cgManager.key | string | `"AUTH_CG_MANAGER_SECRET"` |  |
-| authSecrets.cgManager.name | string | `"harness-secrets"` |  |
-| authSecrets.identityService.key | string | `"AUTH_IDENTITY_SERVICE_SECRET"` |  |
-| authSecrets.identityService.name | string | `"harness-secrets"` |  |
-| authSecrets.ngManager.key | string | `"AUTH_NG_MANAGER_SECRET"` |  |
-| authSecrets.ngManager.name | string | `"harness-secrets"` |  |
-| autoscaling.enabled | bool | `true` |  |
-| autoscaling.maxReplicas | int | `100` |  |
-| autoscaling.minReplicas | int | `1` |  |
-| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
-| config.customerFolderId | string | `"6"` | folder ID of the 'CUSTOMER' folder in looker |
-| config.env | string | `""` | deprecated |
-| config.lookerApiVersion | string | `"4.0"` | looker sdk param |
-| config.lookerHost | string | `"harness-looker"` | hostname of your looker install |
-| config.lookerTimeout | string | `"120"` | looker sdk param |
-| config.lookerVerifySsl | string | `"false"` | looker sdk param |
-| config.modelPrefix | string | `""` | if you have configured models with a prefix enter it here |
-| config.ootbFolderId | string | `"7"` | folder ID of the 'OOTB' folder in looker |
-| config.redisHost | string | `"harness-redis-master"` | hostname of your redis install |
-| config.redisPort | string | `"6379"` | port of your redis install |
+| config.clientId | string | `"fdc237ecf4fd59a49516"` | id used by initial setup user for authentication, generate a 20-byte key, e.g. openssl rand -hex 10 |
+| config.email | string | `"sean.dunne@harness.io"` | email address of the support user, required for initial signup and support |
+| config.firstName | string | `"Harness"` | name of the user who performs setup and support tasks |
+| config.lastName | string | `"Support"` | last name of the user who performs setup and support tasks |
+| config.projectName | string | `"Harness"` | name of the looker project which will be created |
+| config.timescaleConnectionName | string | `"qa-timescale"` | timescale connection name, must match model connection name |
+| config.timescaleDatabase | string | `"Harness"` | timescale database name |
+| config.timescaleHost | string | `"timescale"` | timescale hostname |
+| config.timescalePort | string | `"5432"` | timescale port |
+| config.timescaleUser | string | `"admin"` | timescale user |
 | fullnameOverride | string | `""` |  |
 | global.airgap | string | `"false"` |  |
+| global.ingress.className | string | `""` |  |
+| global.ingress.enabled | bool | `false` |  |
+| global.ingress.tls.enabled | bool | `false` |  |
 | global.loadbalancerURL | string | `""` |  |
 | image.digest | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
-| image.repository | string | `"harness/dashboard-service-signed"` |  |
-| image.tag | string | `"v1.52.14"` |  |
-| lookerSecrets.clientId.key | string | `"LOOKERSDK_CLIENT_ID"` |  |
-| lookerSecrets.clientId.name | string | `"harness-secrets"` |  |
-| lookerSecrets.clientSecret.key | string | `"LOOKERSDK_CLIENT_SECRET"` |  |
+| image.repository | string | `"harness/looker-signed"` |  |
+| image.tag | string | `"22.14.61.2"` |  |
+| ingress.host | string | `""` | Required if ingress is enabled, Looker requires a separate DNS domain name to function |
+| ingress.tls.secretName | string | `""` |  |
+| lookerSecrets.clientSecret.key | string | `"lookerClientSecret"` | name of secret containing the client secret used for initial setup, generate a 24-byte key, e.g. openssl rand -hex 12 |
 | lookerSecrets.clientSecret.name | string | `"harness-secrets"` |  |
-| lookerSecrets.secret.key | string | `"SECRET"` |  |
-| lookerSecrets.secret.name | string | `"harness-secrets"` |  |
+| lookerSecrets.licenseKey.key | string | `"lookerLicenseKey"` | name of secret containing the looker license key which will be provided by Harness |
+| lookerSecrets.licenseKey.name | string | `"harness-secrets"` |  |
+| lookerSecrets.masterKey.key | string | `"lookerMasterKey"` | name of secret containing the key used for at rest encryption by looker, generate a Base64, 32-byte key, e.g. openssl rand -base64 32 |
+| lookerSecrets.masterKey.name | string | `"harness-secrets"` |  |
 | maxSurge | int | `1` |  |
 | maxUnavailable | int | `0` |  |
+| modelsDirectory | string | `"/mnt/lookerfiles"` | directory where Looker models volume will be mounted |
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
+| persistentVolume.accessMode | string | `"ReadWriteOnce"` |  |
+| persistentVolume.storage.database | string | `"2Gi"` | size of volume where Looker stores database |
+| persistentVolume.storage.models | string | `"2Gi"` | size of volume where Looker stores model files |
+| persistentVolume.storageClass | string | `nil` |  |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| replicaCount | int | `1` |  |
-| resources.limits.cpu | int | `1` |  |
-| resources.limits.memory | string | `"1536Mi"` |  |
-| resources.requests.cpu | int | `1` |  |
-| resources.requests.memory | string | `"768Mi"` |  |
+| resources.limits.cpu | int | `4` |  |
+| resources.limits.memory | string | `"8192Mi"` |  |
+| resources.requests.cpu | int | `2` |  |
+| resources.requests.memory | string | `"4096Mi"` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
-| securityContext.runAsUser | int | `65534` |  |
-| service.port | int | `5000` |  |
+| securityContext.runAsUser | int | `1001` |  |
+| service.port.api | int | `19999` |  |
+| service.port.web | int | `9999` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.create | bool | `true` |  |
+| serviceAccount.create | bool | `false` |  |
 | serviceAccount.name | string | `"harness-default"` |  |
+| timescaleSecrets.password.key | string | `"lookerTimescalePassword"` | name of secret containing the timescale password |
+| timescaleSecrets.password.name | string | `"harness-secrets"` |  |
 | tolerations | list | `[]` |  |
+

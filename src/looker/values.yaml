@@ -44,18 +44,31 @@ timescaleSecrets:
     key: lookerTimescalePassword
 
 ingress:
-  enabled: false
-  className: ""
   # -- Required if ingress is enabled, Looker requires a separate DNS domain name to function
-  host:
+  host: ''
   tls:
-    enabled: false
+    secretName: ''
+
+persistentVolume:
+  storageClass:
+  accessMode: ReadWriteOnce
+  storage:
+    # -- size of volume where Looker stores model files
+    models: 2Gi
+    # -- size of volume where Looker stores database
+    database: 2Gi
+
+# -- directory where Looker models volume will be mounted
+modelsDirectory: /mnt/lookerfiles
 
 global:
   loadbalancerURL: ""
   airgap: "false"
   ingress:
     enabled: false
+    className: ''
+    tls:
+      enabled: false
 maxSurge: 1
 maxUnavailable: 0
 
