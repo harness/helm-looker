@@ -1,6 +1,6 @@
 # looker
 
-![Version: 0.1.4](https://img.shields.io/badge/Version-0.1.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.35](https://img.shields.io/badge/AppVersion-22.16.35-informational?style=flat-square)
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.35](https://img.shields.io/badge/AppVersion-22.16.35-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -32,6 +32,7 @@ A Helm chart for Kubernetes
 | global.ingress.enabled | bool | `false` |  |
 | global.ingress.tls.enabled | bool | `false` |  |
 | global.loadbalancerURL | string | `""` |  |
+| global.storageClassName | string | `nil` |  |
 | image.digest | string | `""` |  |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
@@ -53,7 +54,6 @@ A Helm chart for Kubernetes
 | persistentVolume.accessMode | string | `"ReadWriteOnce"` |  |
 | persistentVolume.storage.database | string | `"2Gi"` | size of volume where Looker stores database |
 | persistentVolume.storage.models | string | `"2Gi"` | size of volume where Looker stores model files |
-| persistentVolume.storageClass | string | `nil` |  |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
 | resources.limits.cpu | int | `4` |  |
