@@ -50,7 +50,6 @@ ingress:
     secretName: ''
 
 persistentVolume:
-  storageClass:
   accessMode: ReadWriteOnce
   storage:
     # -- size of volume where Looker stores model files
@@ -64,6 +63,7 @@ modelsDirectory: /mnt/lookerfiles
 global:
   loadbalancerURL: ""
   airgap: "false"
+  storageClassName:
   ingress:
     enabled: false
     className: ''

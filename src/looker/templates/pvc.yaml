@@ -4,7 +4,7 @@ metadata:
   name: lookerfiles
   namespace: {{ .Release.Namespace }}
 spec:
-  storageClassName: {{ .Values.persistentVolume.storageClass }}
+  storageClassName: {{ .Values.global.storageClassName }}
   accessModes:
     - {{ .Values.persistentVolume.accessMode }}
   resources:
@@ -19,7 +19,7 @@ metadata:
   name: looker-db
   namespace: {{ .Release.Namespace }}
 spec:
-  storageClassName: {{ .Values.persistentVolume.storageClass }}
+  storageClassName: {{ .Values.global.storageClassName }}
   accessModes:
     - {{ .Values.persistentVolume.accessMode }}
   resources:
