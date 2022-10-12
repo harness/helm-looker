@@ -11,7 +11,7 @@ config:
   # -- id used by initial setup user for authentication, generate a 20-byte key, e.g. openssl rand -hex 10
   clientId: 'b6fa75dbc50260901f27'
   # -- timescale connection name, must match model connection name
-  timescaleConnectionName: 'qa-timescale'
+  timescaleConnectionName: 'timescale'
   # -- timescale hostname
   timescaleHost: 'timescaledb-single-chart.harness'
   # -- timescale port
@@ -42,7 +42,6 @@ timescaleSecrets:
     name: harness-secrets
     # -- name of secret containing the timescale password
     key: timescaledbPostgresPassword
-    # key: lookerTimescalePassword
 
 ingress:
   # -- Required if ingress is enabled, Looker requires a separate DNS domain name to function
@@ -78,7 +77,7 @@ image:
   repository: harness/looker-signed
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "22.16.35"
+  tag: "22.16.42"
   digest: ""
 
 nameOverride: ""
