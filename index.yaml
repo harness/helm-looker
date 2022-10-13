@@ -3,6 +3,23 @@ entries:
   looker:
   - apiVersion: v2
     appVersion: 22.16.42
+    created: "2022-10-13T13:11:05.827703626Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      version: 2.x.x
+    - name: harness-common
+      repository: https://harness.github.io/helm-common
+      version: 1.x.x
+    description: A Helm chart for Kubernetes
+    digest: 4e2d78e254d7228b885cf3b858f95b5a66029d0aedbe1951e4dc4b1a5d4f901e
+    name: looker
+    type: application
+    urls:
+    - https://github.com/harness/helm-looker/releases/download/looker-0.1.8/looker-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
+    appVersion: 22.16.42
     created: "2022-10-12T13:42:56.470056736Z"
     dependencies:
     - name: common
@@ -120,4 +137,4 @@ entries:
     urls:
     - https://github.com/harness/helm-looker/releases/download/looker-0.1.1/looker-0.1.1.tgz
     version: 0.1.1
-generated: "2022-10-12T13:42:56.470083436Z"
+generated: "2022-10-13T13:11:05.827753928Z"
