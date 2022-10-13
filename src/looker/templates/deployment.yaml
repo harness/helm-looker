@@ -97,10 +97,10 @@ spec:
             - name: looker-startup
               mountPath: /home/looker/looker/lookerstart.cfg
               subPath: lookerstart.cfg
-            - name: lookerfiles
-              mountPath: {{ .Values.modelsDirectory }}
-            - name: looker-db
-              mountPath: /home/looker/looker/.db
+#            - name: lookerfiles
+#              mountPath: {{ .Values.modelsDirectory }}
+#            - name: looker-db
+#              mountPath: /home/looker/looker/.db
       volumes:
         - name: looker-startup
           configMap:
@@ -109,24 +109,24 @@ spec:
             items:
               - key: lookerstart.cfg
                 path: lookerstart.cfg
-        - name: lookerfiles
-          persistentVolumeClaim:
-            claimName: lookerfiles
-            readOnly: false
-        - name: looker-db
-          persistentVolumeClaim:
-            claimName: looker-db
-            readOnly: false
-{{/*      affinity:*/}}
-{{/*        podAntiAffinity:*/}}
-{{/*          requiredDuringSchedulingIgnoredDuringExecution:*/}}
-{{/*          - labelSelector:*/}}
-{{/*              matchExpressions:*/}}
-{{/*              - key: app*/}}
-{{/*                operator: In*/}}
-{{/*                values:*/}}
-{{/*                - '{{ include "app.name" . }}'*/}}
-{{/*            topologyKey: "kubernetes.io/hostname"*/}}
+#        - name: lookerfiles
+#          persistentVolumeClaim:
+#            claimName: lookerfiles
+#            readOnly: false
+#        - name: looker-db
+#          persistentVolumeClaim:
+#            claimName: looker-db
+#            readOnly: false
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - '{{ include "app.name" . }}'
+            topologyKey: "kubernetes.io/hostname"
       {{- with .Values.affinity }}
         {{- toYaml . | nindent 8 }}
       {{- end }}

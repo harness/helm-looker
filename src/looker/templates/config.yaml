@@ -28,4 +28,5 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 data:
-  lookerstart.cfg: 'LOOKERARGS="--no-ssl --shared-storage-dir={{ .Values.modelsDirectory }}"'
+  lookerstart.cfg: 'LOOKERARGS="--no-ssl"'
+#  lookerstart.cfg: 'LOOKERARGS="--no-ssl --shared-storage-dir={{ .Values.modelsDirectory }}"'
