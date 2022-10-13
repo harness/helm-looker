@@ -49,5 +49,15 @@ spec:
           persistentVolumeClaim:
             claimName: lookerfiles
             readOnly: false
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: podAffinity
+                    operator: In
+                    values:
+                      - looker-app
+              topologyKey: topology.kubernetes.io/node
       restartPolicy: Never
   backoffLimit: 4

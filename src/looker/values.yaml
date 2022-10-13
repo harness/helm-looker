@@ -7,7 +7,7 @@ config:
   # -- last name of the user who performs setup and support tasks
   lastName: Support
   # -- email address of the support user, required for initial signup and support
-  email: ''
+  email: 'harnessSupport@harness.io'
   # -- id used by initial setup user for authentication, generate a 20-byte key, e.g. openssl rand -hex 10
   clientId: 'b6fa75dbc50260901f27'
   # -- timescale connection name, must match model connection name
