@@ -34,16 +34,24 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       terminationGracePeriodSeconds: 30
+      initContainers:
+        - name: looker-data-ownership-grant
+          image: ubuntu:20.04
+          command:
+            - 'sh'
+            - '-c'
+            - 'chown -R {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsUser }} "{{ .Values.modelsDirectory }}" "/home/looker/looker/.db"'
+          volumeMounts:
+            - name: lookerfiles
+              mountPath: {{ .Values.modelsDirectory }}
+            - name: looker-db
+              mountPath: /home/looker/looker/.db
       containers:
         - name: '{{ include "app.name" . }}'
           image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
               {{- toYaml .Values.securityContext | nindent 12 }}
-#          lifecycle:
-#            postStart:
-#              exec:
-#                command: ["bash",  "-c", "$HOME/auto-provision.sh"]
           ports:
           - name: looker-web
             containerPort: 9999
@@ -97,10 +105,10 @@ spec:
             - name: looker-startup
               mountPath: /home/looker/looker/lookerstart.cfg
               subPath: lookerstart.cfg
-#            - name: lookerfiles
-#              mountPath: {{ .Values.modelsDirectory }}
-#            - name: looker-db
-#              mountPath: /home/looker/looker/.db
+            - name: lookerfiles
+              mountPath: {{ .Values.modelsDirectory }}
+            - name: looker-db
+              mountPath: /home/looker/looker/.db
       volumes:
         - name: looker-startup
           configMap:
@@ -109,14 +117,14 @@ spec:
             items:
               - key: lookerstart.cfg
                 path: lookerstart.cfg
-#        - name: lookerfiles
-#          persistentVolumeClaim:
-#            claimName: lookerfiles
-#            readOnly: false
-#        - name: looker-db
-#          persistentVolumeClaim:
-#            claimName: looker-db
-#            readOnly: false
+        - name: lookerfiles
+          persistentVolumeClaim:
+            claimName: lookerfiles
+            readOnly: false
+        - name: looker-db
+          persistentVolumeClaim:
+            claimName: looker-db
+            readOnly: false
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
