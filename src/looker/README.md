@@ -1,6 +1,6 @@
 # looker
 
-![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.42](https://img.shields.io/badge/AppVersion-22.16.42-informational?style=flat-square)
+![Version: 0.1.10](https://img.shields.io/badge/Version-0.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.42.0](https://img.shields.io/badge/AppVersion-22.16.42.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -17,7 +17,7 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
 | config.clientId | string | `"b6fa75dbc50260901f27"` | id used by initial setup user for authentication, generate a 20-byte key, e.g. openssl rand -hex 10 |
-| config.email | string | `""` | email address of the support user, required for initial signup and support |
+| config.email | string | `"harnessSupport@harness.io"` | email address of the support user, required for initial signup and support |
 | config.firstName | string | `"Harness"` | name of the user who performs setup and support tasks |
 | config.lastName | string | `"Support"` | last name of the user who performs setup and support tasks |
 | config.projectName | string | `"Harness"` | name of the looker project which will be created |
@@ -37,7 +37,7 @@ A Helm chart for Kubernetes
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"harness/looker-signed"` |  |
-| image.tag | string | `"22.16.42"` |  |
+| image.tag | string | `"22.16.42.0"` |  |
 | ingress.host | string | `""` | Required if ingress is enabled, Looker requires a separate DNS domain name to function |
 | ingress.tls.secretName | string | `""` |  |
 | lookerSecrets.clientSecret.key | string | `"lookerClientSecret"` | name of secret containing the client secret used for initial setup, generate a 24-byte key, e.g. openssl rand -hex 12 |
