@@ -1,6 +1,6 @@
 # looker
 
-![Version: 0.1.10](https://img.shields.io/badge/Version-0.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.42.0](https://img.shields.io/badge/AppVersion-22.16.42.0-informational?style=flat-square)
+![Version: 0.1.11](https://img.shields.io/badge/Version-0.1.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.46](https://img.shields.io/badge/AppVersion-22.16.46-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -21,6 +21,11 @@ A Helm chart for Kubernetes
 | config.firstName | string | `"Harness"` | name of the user who performs setup and support tasks |
 | config.lastName | string | `"Support"` | last name of the user who performs setup and support tasks |
 | config.projectName | string | `"Harness"` | name of the looker project which will be created |
+| config.redshiftConnectionName | string | `"redshift-ccm"` | redshift connection name, must match model connection name |
+| config.redshiftDatabase | string | `"dev"` | redshift database name |
+| config.redshiftHost | string | `"redshift-cluster-1.cgt6q356vmnl.us-east-1.redshift.amazonaws.com"` | redshift hostname |
+| config.redshiftPort | string | `"5439"` | redshift port |
+| config.redshiftUser | string | `"looker"` | redshift user |
 | config.timescaleConnectionName | string | `"timescale"` | timescale connection name, must match model connection name |
 | config.timescaleDatabase | string | `"harness"` | timescale database name |
 | config.timescaleHost | string | `"timescaledb-single-chart.harness"` | timescale hostname |
@@ -37,7 +42,7 @@ A Helm chart for Kubernetes
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"harness/looker-signed"` |  |
-| image.tag | string | `"22.16.42.0"` |  |
+| image.tag | string | `"22.16.46"` |  |
 | ingress.host | string | `""` | Required if ingress is enabled, Looker requires a separate DNS domain name to function |
 | ingress.tls.secretName | string | `""` |  |
 | lookerSecrets.clientSecret.key | string | `"lookerClientSecret"` | name of secret containing the client secret used for initial setup, generate a 24-byte key, e.g. openssl rand -hex 12 |
@@ -56,6 +61,8 @@ A Helm chart for Kubernetes
 | persistentVolume.storage.models | string | `"2Gi"` | size of volume where Looker stores model files |
 | podAnnotations | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
+| redshiftSecrets.password.key | string | `"redshiftPassword"` | name of secret containing the redshift password |
+| redshiftSecrets.password.name | string | `"harness-secrets"` |  |
 | resources.limits.cpu | int | `4` |  |
 | resources.limits.memory | string | `"8192Mi"` |  |
 | resources.requests.cpu | int | `2` |  |

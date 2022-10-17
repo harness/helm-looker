@@ -82,6 +82,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.timescaleSecrets.password.name }}
                   key: {{ .Values.timescaleSecrets.password.key }}
+            - name: REDSHIFT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.redshiftSecrets.password.name }}
+                  key: {{ .Values.redshiftSecrets.password.key }}
           envFrom:
           - configMapRef:
               name: '{{ include "app.name" . }}'

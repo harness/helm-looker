@@ -16,7 +16,14 @@ data:
   TIMESCALE_PORT: '{{ .Values.config.timescalePort }}'
   TIMESCALE_DATABASE: '{{ .Values.config.timescaleDatabase }}'
   TIMESCALE_USER: '{{ .Values.config.timescaleUser }}'
+  REDSHIFT_CONNECTION_NAME: {{ .Values.config.redshiftConnectionName }}
+  REDSHIFT_HOST: {{ .Values.config.redshiftHost }}
+  REDSHIFT_PORT: {{ .Values.config.redshiftPort | quote }}
+  REDSHIFT_DATABASE: {{ .Values.config.redshiftDatabase }}
+  REDSHIFT_USER: {{ .Values.config.redshiftUser }}
   PROJECT_NAME: '{{ .Values.config.projectName }}'
+  DOMAIN_WHITELIST: {{ .Values.global.loadbalancerURL }}
+  MODELS_DIR: {{ .Values.modelsDirectory }}
 
 ---
 
