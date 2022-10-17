@@ -20,6 +20,16 @@ config:
   timescaleDatabase: 'harness'
   # -- timescale user
   timescaleUser: 'postgres'
+  # -- redshift connection name, must match model connection name
+  redshiftConnectionName: redshift-ccm
+  # -- redshift hostname
+  redshiftHost: redshift-cluster-1.cgt6q356vmnl.us-east-1.redshift.amazonaws.com
+  # -- redshift port
+  redshiftPort: '5439'
+  # -- redshift database name
+  redshiftDatabase: dev
+  # -- redshift user
+  redshiftUser: looker
   # -- name of the looker project which will be created
   projectName: 'Harness'
 
@@ -42,6 +52,12 @@ timescaleSecrets:
     name: harness-secrets
     # -- name of secret containing the timescale password
     key: timescaledbPostgresPassword
+
+redshiftSecrets:
+  password:
+    name: harness-secrets
+    # -- name of secret containing the redshift password
+    key: redshiftPassword
 
 ingress:
   # -- Required if ingress is enabled, Looker requires a separate DNS domain name to function
@@ -77,7 +93,7 @@ image:
   repository: harness/looker-signed
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "22.16.42.0"
+  tag: "22.16.46"
   digest: ""
 
 nameOverride: ""
