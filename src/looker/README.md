@@ -1,6 +1,6 @@
 # looker
 
-![Version: 0.1.11](https://img.shields.io/badge/Version-0.1.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.46](https://img.shields.io/badge/AppVersion-22.16.46-informational?style=flat-square)
+![Version: 0.1.12](https://img.shields.io/badge/Version-0.1.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.46.0](https://img.shields.io/badge/AppVersion-22.16.46.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -16,7 +16,6 @@ A Helm chart for Kubernetes
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` |  |
-| config.clientId | string | `"b6fa75dbc50260901f27"` | id used by initial setup user for authentication, generate a 20-byte key, e.g. openssl rand -hex 10 |
 | config.email | string | `"harnessSupport@harness.io"` | email address of the support user, required for initial signup and support |
 | config.firstName | string | `"Harness"` | name of the user who performs setup and support tasks |
 | config.lastName | string | `"Support"` | last name of the user who performs setup and support tasks |
@@ -42,11 +41,13 @@ A Helm chart for Kubernetes
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"harness/looker-signed"` |  |
-| image.tag | string | `"22.16.46"` |  |
+| image.tag | string | `"22.16.46.0"` |  |
 | ingress.host | string | `""` | Required if ingress is enabled, Looker requires a separate DNS domain name to function |
 | ingress.tls.secretName | string | `""` |  |
-| lookerSecrets.clientSecret.key | string | `"lookerClientSecret"` | name of secret containing the client secret used for initial setup, generate a 24-byte key, e.g. openssl rand -hex 12 |
-| lookerSecrets.clientSecret.name | string | `"harness-secrets"` |  |
+| lookerSecrets.clientId.key | string | `"lookerClientId"` | name of secret containing the id used for API authentication, generate a 20-byte key, e.g. openssl rand -hex 10 |
+| lookerSecrets.clientId.name | string | `"harness-looker-secrets"` |  |
+| lookerSecrets.clientSecret.key | string | `"lookerClientSecret"` | name of secret containing the client secret used for API authentication, generate a 24-byte key, e.g. openssl rand -hex 12 |
+| lookerSecrets.clientSecret.name | string | `"harness-looker-secrets"` |  |
 | lookerSecrets.licenseKey.key | string | `"lookerLicenseKey"` | name of secret containing the looker license key which will be provided by Harness |
 | lookerSecrets.licenseKey.name | string | `"harness-secrets"` |  |
 | lookerSecrets.masterKey.key | string | `"lookerMasterKey"` | name of secret containing the key used for at rest encryption by looker, generate a Base64, 32-byte key, e.g. openssl rand -base64 32 |
@@ -73,8 +74,8 @@ A Helm chart for Kubernetes
 | service.port.web | int | `9999` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` |  |
-| serviceAccount.create | bool | `false` |  |
-| serviceAccount.name | string | `"harness-default"` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `"harness-looker"` |  |
 | timescaleSecrets.password.key | string | `"timescaledbPostgresPassword"` | name of secret containing the timescale password |
 | timescaleSecrets.password.name | string | `"harness-secrets"` |  |
 | tolerations | list | `[]` |  |
