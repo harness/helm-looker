@@ -77,6 +77,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.lookerSecrets.clientSecret.name }}
                   key: {{ .Values.lookerSecrets.clientSecret.key }}
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.lookerSecrets.clientId.name }}
+                  key: {{ .Values.lookerSecrets.clientId.key }}
             - name: TIMESCALE_PASSWORD
               valueFrom:
                 secretKeyRef:

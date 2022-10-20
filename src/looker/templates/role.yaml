@@ -1,0 +1,40 @@
+{{- if .Values.serviceAccount.create -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: '{{ include "app.serviceAccountName" . }}'
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+rules:
+  - apiGroups: ['apps']
+    resources: ['deployments']
+    verbs: ['get', 'patch']
+    resourceNames: ['ng-custom-dashboards']
+  - apiGroups: ['']
+    resources: ['configmaps']
+    verbs: ['get', 'patch']
+    resourceNames: ['ng-custom-dashboards']
+  - apiGroups: ['']
+    resources: ['secrets']
+    verbs: ['get', 'patch']
+    resourceNames: ['{{ .Values.lookerSecrets.clientId.name }}']
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: '{{ include "app.serviceAccountName" . }}'
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: '{{ include "app.serviceAccountName" . }}'
+    namespace: {{ .Release.Namespace }}
+roleRef:
+  kind: Role
+  name: '{{ include "app.serviceAccountName" . }}'
+  apiGroup: rbac.authorization.k8s.io
+{{- end }}

@@ -8,8 +8,6 @@ config:
   lastName: Support
   # -- email address of the support user, required for initial signup and support
   email: 'harnessSupport@harness.io'
-  # -- id used by initial setup user for authentication, generate a 20-byte key, e.g. openssl rand -hex 10
-  clientId: 'b6fa75dbc50260901f27'
   # -- timescale connection name, must match model connection name
   timescaleConnectionName: 'timescale'
   # -- timescale hostname
@@ -42,9 +40,13 @@ lookerSecrets:
     name: harness-secrets
     # -- name of secret containing the key used for at rest encryption by looker, generate a Base64, 32-byte key, e.g. openssl rand -base64 32
     key: lookerMasterKey
+  clientId:
+    name: harness-looker-secrets
+    # -- name of secret containing the id used for API authentication, generate a 20-byte key, e.g. openssl rand -hex 10
+    key: lookerClientId
   clientSecret:
-    name: harness-secrets
-    # -- name of secret containing the client secret used for initial setup, generate a 24-byte key, e.g. openssl rand -hex 12
+    name: harness-looker-secrets
+    # -- name of secret containing the client secret used for API authentication, generate a 24-byte key, e.g. openssl rand -hex 12
     key: lookerClientSecret
 
 timescaleSecrets:
@@ -93,7 +95,7 @@ image:
   repository: harness/looker-signed
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "22.16.46"
+  tag: "22.16.46.0"
   digest: ""
 
 nameOverride: ""
@@ -101,12 +103,12 @@ fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
-  create: false
+  create: true
   # Annotations to add to the service account
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "harness-default"
+  name: "harness-looker"
 
 podAnnotations: {}
 
