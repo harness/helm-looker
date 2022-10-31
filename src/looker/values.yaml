@@ -21,11 +21,11 @@ config:
   # -- redshift connection name, must match model connection name
   redshiftConnectionName: redshift-ccm
   # -- redshift hostname
-  redshiftHost: redshift-cluster-1.cgt6q356vmnl.us-east-1.redshift.amazonaws.com
+  redshiftHost:
   # -- redshift port
   redshiftPort: '5439'
   # -- redshift database name
-  redshiftDatabase: dev
+  redshiftDatabase:
   # -- redshift user
   redshiftUser: looker
   # -- name of the looker project which will be created
@@ -95,7 +95,7 @@ image:
   repository: harness/looker-signed
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "22.16.46.0"
+  tag: "22.18.16.0"
   digest: ""
 
 nameOverride: ""

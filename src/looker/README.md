@@ -1,6 +1,6 @@
 # looker
 
-![Version: 0.1.12](https://img.shields.io/badge/Version-0.1.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.16.46.0](https://img.shields.io/badge/AppVersion-22.16.46.0-informational?style=flat-square)
+![Version: 0.1.13](https://img.shields.io/badge/Version-0.1.13-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 22.18.16.0](https://img.shields.io/badge/AppVersion-22.18.16.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -21,8 +21,8 @@ A Helm chart for Kubernetes
 | config.lastName | string | `"Support"` | last name of the user who performs setup and support tasks |
 | config.projectName | string | `"Harness"` | name of the looker project which will be created |
 | config.redshiftConnectionName | string | `"redshift-ccm"` | redshift connection name, must match model connection name |
-| config.redshiftDatabase | string | `"dev"` | redshift database name |
-| config.redshiftHost | string | `"redshift-cluster-1.cgt6q356vmnl.us-east-1.redshift.amazonaws.com"` | redshift hostname |
+| config.redshiftDatabase | string | `nil` | redshift database name |
+| config.redshiftHost | string | `nil` | redshift hostname |
 | config.redshiftPort | string | `"5439"` | redshift port |
 | config.redshiftUser | string | `"looker"` | redshift user |
 | config.timescaleConnectionName | string | `"timescale"` | timescale connection name, must match model connection name |
@@ -41,7 +41,7 @@ A Helm chart for Kubernetes
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"harness/looker-signed"` |  |
-| image.tag | string | `"22.16.46.0"` |  |
+| image.tag | string | `"22.18.16.0"` |  |
 | ingress.host | string | `""` | Required if ingress is enabled, Looker requires a separate DNS domain name to function |
 | ingress.tls.secretName | string | `""` |  |
 | lookerSecrets.clientId.key | string | `"lookerClientId"` | name of secret containing the id used for API authentication, generate a 20-byte key, e.g. openssl rand -hex 10 |
