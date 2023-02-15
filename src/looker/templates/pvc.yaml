@@ -13,6 +13,7 @@ spec:
 
 ---
 
+{{- if not .Values.global.ha }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -25,3 +26,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistentVolume.storage.database }}
+{{- end}}

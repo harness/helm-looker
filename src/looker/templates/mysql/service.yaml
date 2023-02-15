@@ -1,0 +1,18 @@
+{{- if .Values.global.ha }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "app.name" . }}-mysql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  type: {{.Values.service.type}}
+  ports:
+    - name: {{ include "app.name" . }}-mysql
+      port: {{ .Values.mysql.port }}
+      protocol: TCP
+      targetPort: {{ include "app.name" . }}-mysql
+  selector:
+    {{- include "app.selectorLabels" . | nindent 4 }}
+{{- end}}

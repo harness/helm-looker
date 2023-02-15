@@ -23,6 +23,12 @@ data:
   PROJECT_NAME: '{{ .Values.config.projectName }}'
   DOMAIN_WHITELIST: {{ .Values.global.loadbalancerURL }}
   MODELS_DIR: {{ .Values.modelsDirectory }}
+  {{- if .Values.global.ha }}
+  LOOKER_MYSQL_HOST: looker-mysql.{{ .Release.Namespace }}.svc.cluster.local
+  LOOKER_MYSQL_USERNAME: {{ .Values.mysql.user }}
+  LOOKER_MYSQL_DATABASE: {{ .Values.mysql.database }}
+  LOOKER_MYSQL_PORT: {{ .Values.mysql.port | quote }}
+  {{- end}}
 
 ---
 
@@ -34,4 +40,9 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 data:
-  lookerstart.cfg: 'LOOKERARGS="--no-ssl --shared-storage-dir={{ .Values.modelsDirectory }}"'
+  lookerstart.cfg: |
+    LOOKERARGS="--no-ssl --shared-storage-dir={{ .Values.modelsDirectory }}
+    {{- if .Values.global.ha }}
+    -d looker-db.yml
+    {{- end}}
+    "
