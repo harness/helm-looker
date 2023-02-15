@@ -1,0 +1,77 @@
+{{- if .Values.global.ha }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: '{{ include "app.name" . }}-mysql'
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  progressDeadlineSeconds: 300
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: {{.Values.maxSurge}}
+      maxUnavailable: {{.Values.maxUnavailable}}
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: mysql
+          image: {{ include "common.images.image" (dict "imageRoot" .Values.image.mysql "global" .Values.global) }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mysqlSecrets.password.root.name }}
+                  key: {{ .Values.mysqlSecrets.password.root.key }}
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mysqlSecrets.password.user.name }}
+                  key: {{ .Values.mysqlSecrets.password.user.key }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "app.name" . }}-mysql
+          ports:
+            - name: {{ include "app.name" . }}-mysql
+              containerPort: 3306
+              protocol: "TCP"
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+            - name: mysql-startup
+              mountPath: /etc/mysql/my.cnf
+              subPath: my.cnf
+            - name: mysql-init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: {{ include "app.name" . }}-mysql
+        - name: mysql-startup
+          configMap:
+            defaultMode: 400
+            name: mysql-startup-options
+            items:
+              - key: my.cnf
+                path: my.cnf
+        - name: mysql-init-scripts
+          configMap:
+            defaultMode: 400
+            name: mysql-init-scripts
+{{- end}}

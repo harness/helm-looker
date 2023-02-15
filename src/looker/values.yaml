@@ -31,6 +31,22 @@ config:
   # -- name of the looker project which will be created
   projectName: 'Harness'
 
+mysql:
+  user: looker
+  database: looker
+  port: '3306'
+
+mysqlSecrets:
+  password:
+    root:
+      name: harness-secrets
+      # -- name of secret containing the mysql root password
+      key: lookerMySqlRootPassword
+    user:
+      name: harness-secrets
+      # -- name of secret containing the mysql looker user password
+      key: lookerMySqlUserPassword
+
 lookerSecrets:
   licenseKey:
     name: harness-secrets
@@ -81,6 +97,7 @@ modelsDirectory: /mnt/lookerfiles
 global:
   loadbalancerURL: ""
   airgap: "false"
+  ha: false
   storageClassName:
   ingress:
     enabled: false
@@ -97,6 +114,11 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "22.18.18.0"
   digest: ""
+
+  mysql:
+    registry: docker.io
+    repository: mysql/enterprise-server
+    tag: "8.0"
 
 nameOverride: ""
 fullnameOverride: ""

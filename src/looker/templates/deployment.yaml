@@ -23,7 +23,6 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        podAffinity: looker-app
         {{- include "app.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
@@ -38,14 +37,20 @@ spec:
         - name: looker-data-ownership-grant
           image: ubuntu:20.04
           command:
-            - 'sh'
-            - '-c'
-            - 'chown -R {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsUser }} "{{ .Values.modelsDirectory }}" "/home/looker/looker/.db"'
+            - 'chown'
+            - '-R'
+            - '{{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsUser }}'
+            - '{{ .Values.modelsDirectory }}'
+            {{- if not .Values.global.ha }}
+            - '/home/looker/looker/.db'
+            {{- end}}
           volumeMounts:
             - name: lookerfiles
               mountPath: {{ .Values.modelsDirectory }}
+            {{- if not .Values.global.ha }}
             - name: looker-db
               mountPath: /home/looker/looker/.db
+            {{- end}}
       containers:
         - name: '{{ include "app.name" . }}'
           image: {{ include "common.images.image" (dict "imageRoot" .Values.image "global" .Values.global) }}
@@ -92,6 +97,13 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.redshiftSecrets.password.name }}
                   key: {{ .Values.redshiftSecrets.password.key }}
+            {{- if .Values.global.ha }}
+            - name: LOOKER_MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.mysqlSecrets.password.user.name }}
+                  key: {{ .Values.mysqlSecrets.password.user.key }}
+            {{- end}}
           envFrom:
           - configMapRef:
               name: '{{ include "app.name" . }}'
@@ -110,15 +122,17 @@ spec:
             initialDelaySeconds: 60
             timeoutSeconds: 5
             periodSeconds: 10
-            failureThreshold: 20
+            failureThreshold: 40
           volumeMounts:
             - name: looker-startup
               mountPath: /home/looker/looker/lookerstart.cfg
               subPath: lookerstart.cfg
             - name: lookerfiles
               mountPath: {{ .Values.modelsDirectory }}
+            {{- if not .Values.global.ha }}
             - name: looker-db
               mountPath: /home/looker/looker/.db
+            {{- end}}
       volumes:
         - name: looker-startup
           configMap:
@@ -131,10 +145,12 @@ spec:
           persistentVolumeClaim:
             claimName: lookerfiles
             readOnly: false
+        {{- if not .Values.global.ha }}
         - name: looker-db
           persistentVolumeClaim:
             claimName: looker-db
             readOnly: false
+        {{- end}}
       affinity:
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:

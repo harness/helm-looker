@@ -1,0 +1,14 @@
+{{- if .Values.global.ha }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "app.name" . }}-mysql
+  namespace: {{ .Release.Namespace }}
+spec:
+  storageClassName: {{ .Values.global.storageClassName }}
+  accessModes:
+    - {{ .Values.persistentVolume.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.persistentVolume.storage.database }}
+{{- end}}

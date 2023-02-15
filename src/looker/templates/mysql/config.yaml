@@ -1,0 +1,44 @@
+{{- if .Values.global.ha }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "app.name" . }}-mysql
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+data:
+  MYSQL_DATABASE: {{ .Values.mysql.database }}
+  MYSQL_USER: {{ .Values.mysql.user }}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-startup-options
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+data:
+  my.cnf: |
+    [mysqld]
+    max_allowed_packet = 1073741824
+    internal_tmp_mem_storage_engine = MEMORY
+    binlog_format = MIXED
+
+    character_set_server = utf8mb4
+    collation_server = utf8mb4_general_ci
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-scripts
+  namespace: '{{ .Release.Namespace }}'
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+data:
+  grant_all_on_looker_tmp.sql: |
+    grant all on looker_tmp.* to '{{.Values.mysql.user}}'@'%';
+{{- end}}
